@@ -124,7 +124,7 @@ function f:OnEvent(event, addon)
 
 			dam[du]:SetHeight(dam[du]:GetParent():GetHeight())
 			
-			dam[du]:SetWidth(currentdam(dam, du));
+			dam[du]:SetWidth(currentdam(dam, du))
 			
 			--Class color
 			local r, g, b = classcolor(du)
@@ -163,7 +163,7 @@ function f:OnEvent(event, addon)
 				-- Set textures
 				hp[du]:SetTexture(defaults.hpOorTex)
 
-				dam[du]:SetTexture(defaults.damOorText)
+				dam[du]:SetTexture(defaults.damOorTex)
 
 				-- Override default behavoir
 				frame:SetAlpha(defaults.frameAlpha)
@@ -172,7 +172,7 @@ function f:OnEvent(event, addon)
 			else
 
 				-- Update Colors
-				hp[du]:SetVertexColor(defaults.hpIrVer, defaults.hpIrVer, defaults.hpIrVer, defaults.highAlpha);
+				hp[du]:SetVertexColor(defaults.hpIrVer, defaults.hpIrVer, defaults.hpIrVer, defaults.highAlpha)
 				
 				-- Only set color for alive unit
 				if (not UnitIsDeadOrGhost(du)) then
@@ -236,10 +236,16 @@ function f:OnEvent(event, addon)
 			-- Dead or offline
 			if (not UnitIsConnected(du) or UnitIsDeadOrGhost(du)) then
 
+				hp[du]:Hide()
+
 				-- Set damage bar width to cover entire frame
 				dam[du]:SetWidth(frame:GetWidth())
 
-				dam[du]:SetAlpha(defaults.minAlpha);
+				dam[du]:SetAlpha(defaults.minAlpha)
+
+			else
+
+				hp[du]:Show()
 
 			end
 
@@ -257,7 +263,7 @@ function f:OnEvent(event, addon)
 
 		if (i[du] == true) then
 
-			frame.aggroHighlight:Hide();
+			frame.aggroHighlight:Hide()
 
 		end
 
@@ -284,14 +290,23 @@ end
 -- Returns current hp bar width relative to frame width
 function currenthp(hp, du)
 
-	return ( UnitHealth(du) ) / UnitHealthMax(du) * hp[du]:GetParent():GetWidth()
+	return UnitHealth(du) / UnitHealthMax(du) * hp[du]:GetParent():GetWidth()
 
 end
 
 -- Returns current damage bar width relative to frame width
 function currentdam(dam, du)
 
-	return 1 - (  math.max(0, UnitHealthMax(du) - UnitHealth(du) - UnitGetIncomingHeals(du) )) / UnitHealthMax(du) * dam[du]:GetParent():GetWidth()
+	local inc = 0
+
+	-- This comes back nil sometimes when someone joins the group
+	if ( UnitGetIncomingHeals(du) ~= nil) then
+
+		inc = UnitGetIncomingHeals(du)
+
+	end
+
+	return 1 - ( math.max(0, UnitHealthMax(du) - UnitHealth(du) - inc )) / UnitHealthMax(du) * dam[du]:GetParent():GetWidth()
 
 end
 
