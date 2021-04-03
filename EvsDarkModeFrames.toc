@@ -1,0 +1,8 @@
+## Interface: 80000
+## Version: v0.1.0
+## Title: EvDarkModeFrames
+## Notes: Dark Mode Blizzard Raid Frames
+## Author: Evan
+## Dependencies: Blizzard_CUFProfiles
+
+EvsDarkModeFrames.lua
