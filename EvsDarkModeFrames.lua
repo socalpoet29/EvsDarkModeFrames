@@ -5,7 +5,7 @@ local NAME = ...
 
 local defaults = {
 
-	debugMessage = true,
+	debugMessage = false,
 	hpIrTex = 'Interface\\AddOns\\EvsDarkModeFrames\\Media\\lightgrad.tga',
 	damIrTex = 'Interface\\AddOns\\EvsDarkModeFrames\\Media\\darkgrad.tga',
 	hpIrVer = 0.07,
@@ -223,36 +223,6 @@ function f:OnEvent(event, addon)
 
 	end)
 
-
-	-- Handle dead or offline units
-	hooksecurefunc("CompactUnitFrame_UpdateStatusText", function(frame)
-
-		local du = frame.displayedUnit
-
-		if not checkgroup(du) then return end
-
-		if (i[du] == true) then
-
-			-- Dead or offline
-			if (not UnitIsConnected(du) or UnitIsDeadOrGhost(du)) then
-
-				hp[du]:Hide()
-
-				-- Set damage bar width to cover entire frame
-				dam[du]:SetWidth(frame:GetWidth())
-
-				dam[du]:SetAlpha(defaults.minAlpha)
-
-			else
-
-				hp[du]:Show()
-
-			end
-
-		end
-
-	end)
-
 	-- Hide aggro highlight since it clashes with theme
 	hooksecurefunc("CompactUnitFrame_UpdateAggroHighlight", function(frame)
 
@@ -290,6 +260,12 @@ end
 -- Returns current hp bar width relative to frame width
 function currenthp(hp, du)
 
+	if (checkdead(du)) then
+	
+		return 1
+
+	end
+
 	return UnitHealth(du) / UnitHealthMax(du) * hp[du]:GetParent():GetWidth()
 
 end
@@ -306,7 +282,13 @@ function currentdam(dam, du)
 
 	end
 
-	return 1 - ( math.max(0, UnitHealthMax(du) - UnitHealth(du) - inc )) / UnitHealthMax(du) * dam[du]:GetParent():GetWidth()
+	if (checkdead(du)) then
+	
+		return 1
+
+	end
+
+	return 1 - ( math.max(1, UnitHealthMax(du) - UnitHealth(du) - inc )) / UnitHealthMax(du) * dam[du]:GetParent():GetWidth()
 
 end
 
@@ -314,5 +296,11 @@ end
 function checkgroup(du)
 
 	return group[strsub(du, 1, 4)]
+
+end
+
+function checkdead(du) 
+
+	return (not UnitIsConnected(du) or UnitIsDeadOrGhost(du))
 
 end

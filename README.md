@@ -29,3 +29,9 @@ Ketho (EU-Boulderfist), author of the RaidFadeMore addon, which I studied and us
 | N/A | Clearer display for OoR, dead, raid debuff (i.e. miasma, artificer mc) |
 | N/A | Hide OoF inc heals |
 | Sometimes | Wonks out until reload |
+
+showed OoR for player who joined late??
+
+Forgeborne Reveries, Possession
+
+Looks bad with border
